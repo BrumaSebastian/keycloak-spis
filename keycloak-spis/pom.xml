@@ -11,10 +11,12 @@
     <modules>
         <module>spi-policy</module>
         <module>common</module>
+        <module>spi-resources</module>
+        <module>assembly</module>
     </modules>
 
     <properties>
-        <keycloak.version>26.3.3</keycloak.version>
+        <keycloak.version>26.4.0</keycloak.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -22,6 +24,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- Keycloak version managed here -->
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-admin-client</artifactId>
+                <version>26.0.7</version>
+            </dependency>
             <dependency>
                 <groupId>org.keycloak</groupId>
                 <artifactId>keycloak-core</artifactId>
@@ -43,9 +50,33 @@
     <profiles>
         <profile>
             <id>with-policy</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
             <modules>
                 <module>common</module>
                 <module>spi-policy</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>with-resources</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>common</module>
+                <module>spi-resources</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>all</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>spi-policy</module>
+                <module>common</module>
+                <module>spi-resources</module>
             </modules>
         </profile>
     </profiles>
