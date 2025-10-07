@@ -11,4 +11,13 @@
 
       <artifactId>common</artifactId>
       <packaging>jar</packaging>
+
+      <dependencies>
+            <!-- JUnit for testing -->
+            <dependency>
+                  <groupId>junit</groupId>
+                  <artifactId>junit</artifactId>
+                  <scope>test</scope>
+            </dependency>
+      </dependencies>
 </project>

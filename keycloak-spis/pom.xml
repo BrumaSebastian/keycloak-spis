@@ -44,6 +44,19 @@
                 <artifactId>keycloak-server-spi-private</artifactId>
                 <version>${keycloak.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-services</artifactId>
+                <version>${keycloak.version}</version>
+            </dependency>
+            <!-- Testing dependencies -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
