@@ -45,6 +45,12 @@
             <artifactId>testcontainers</artifactId>
             <version>1.19.0</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -52,6 +58,12 @@
             <artifactId>junit-jupiter</artifactId>
             <version>1.19.0</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -59,6 +71,12 @@
             <artifactId>testcontainers-keycloak</artifactId>
             <version>3.9.0</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- REST Assured for API testing -->
@@ -77,11 +95,27 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- SLF4J for logging in tests -->
+        <!-- SLF4J API - Compatible version for Keycloak -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- SLF4J for logging in tests - Use compatible version -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>2.0.9</version>
+            <version>1.7.36</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JBoss Logging for compatibility -->
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>3.5.3.Final</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -102,6 +136,14 @@
                         <include>**/*Test.java</include>
                         <include>**/*IntegrationTest.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        <org.jboss.logging.provider>slf4j</org.jboss.logging.provider>
+                    </systemPropertyVariables>
+                    <argLine>
+                        -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+                        -Dorg.jboss.logging.provider=slf4j
+                    </argLine>
                 </configuration>
             </plugin>
         </plugins>
