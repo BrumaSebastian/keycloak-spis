@@ -95,22 +95,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- SLF4J API - Compatible version for Keycloak -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- SLF4J for logging in tests - Use compatible version -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.36</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- JBoss Logging for compatibility -->
         <dependency>
             <groupId>org.jboss.logging</groupId>
