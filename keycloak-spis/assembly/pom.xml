@@ -16,7 +16,7 @@
     <description>Combined JAR with all SPI modules</description>
 
     <dependencies>
-        <!-- Include all modules -->
+        <!-- Include all our custom modules -->
         <dependency>
             <groupId>com.keycloak.spis</groupId>
             <artifactId>common</artifactId>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>com.keycloak.spis</groupId>
             <artifactId>spi-resources</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -44,6 +44,15 @@
                 <configuration>
                     <finalName>keycloak-spis-all-${project.version}</finalName>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <artifactSet>
+                        <includes>
+                            <include>com.keycloak.spis:*</include>
+                        </includes>
+                        <excludes>
+                            <exclude>org.keycloak:*</exclude>
+                            <exclude>org.jboss.logging:*</exclude>
+                        </excludes>
+                    </artifactSet>
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>

@@ -1,1 +1,2 @@
 com.extensions.spis.resources.admin.factories.UsersExtensionAdminResourceFactory
+com.extensions.spis.resources.admin.factories.GroupsExtensionAdminResourceFactory

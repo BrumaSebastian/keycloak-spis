@@ -1,7 +1,5 @@
 package com.extensions.spis.resources.admin.test;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,12 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.RealmRepresentation;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import com.extensions.spis.resources.admin.factories.UsersExtensionAdminResourceFactory;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import io.quarkus.logging.Log;
