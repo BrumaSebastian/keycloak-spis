@@ -1,4 +1,4 @@
-package com.extensions.spis.resources.admin.resources;
+package com.keycloak.spis.resources.admin.resources;
 
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -9,12 +9,9 @@ import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
 import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 
 public class UsersAdminResource extends org.keycloak.services.resources.admin.UsersResource {
     private final AdminPermissionEvaluator auth;
@@ -51,26 +48,5 @@ public class UsersAdminResource extends org.keycloak.services.resources.admin.Us
         }
 
         return new UserAdminResource(session, user, auth, adminEvent);
-    }
-
-    // Add direct user access without /users/ prefix
-    @Path("{user-id}/custom-info")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getUserCustomInfo(final @PathParam("user-id") String id) {
-        System.out.println("Direct access to custom-info for user ID: " + id);
-        UserModel user = session.users().getUserById(realm, id);
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-        return "\"Custom info for user: " + user.getUsername() + "\"";
-    }
-
-    @Path("test")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public String testEndpoint() {
-        System.out.println("Test endpoint called on UsersAdminResource");
-        return "\"UsersAdminResource test endpoint working\"";
     }
 }

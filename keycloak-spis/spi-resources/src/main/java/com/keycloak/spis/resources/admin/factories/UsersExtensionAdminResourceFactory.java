@@ -1,11 +1,11 @@
-package com.extensions.spis.resources.admin.factories;
+package com.keycloak.spis.resources.admin.factories;
 
 import org.keycloak.Config.Scope;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.services.resources.admin.ext.AdminRealmResourceProviderFactory;
 
-import com.extensions.spis.resources.admin.providers.UsersExtensionAdminProvider;
+import com.keycloak.spis.resources.admin.providers.UsersExtensionAdminProvider;
 
 public class UsersExtensionAdminResourceFactory implements AdminRealmResourceProviderFactory {
     public static final String ID = "users-extension";

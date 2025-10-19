@@ -1,11 +1,11 @@
-package com.extensions.spis.resources.admin.factories;
+package com.keycloak.spis.resources.admin.factories;
 
 import org.keycloak.Config.Scope;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.services.resources.admin.ext.AdminRealmResourceProviderFactory;
 
-import com.extensions.spis.resources.admin.providers.GroupsExtensionAdminProvider;
+import com.keycloak.spis.resources.admin.providers.GroupsExtensionAdminProvider;
 
 public class GroupsExtensionAdminResourceFactory implements AdminRealmResourceProviderFactory {
     public static final String ID = "groups-extension";
@@ -25,10 +25,10 @@ public class GroupsExtensionAdminResourceFactory implements AdminRealmResourcePr
     }
 
     @Override
-    public void init(Scope arg0) {
+    public void init(Scope config) {
     }
 
     @Override
-    public void postInit(KeycloakSessionFactory arg0) {
+    public void postInit(KeycloakSessionFactory factory) {
     }
 }

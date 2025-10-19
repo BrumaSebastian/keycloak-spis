@@ -1,4 +1,4 @@
-package com.extensions.spis.resources.admin.resources;
+package com.keycloak.spis.resources.admin.resources;
 
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.annotations.cache.NoCache;

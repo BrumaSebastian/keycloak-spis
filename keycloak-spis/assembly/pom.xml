@@ -32,6 +32,11 @@
             <artifactId>spi-resources</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.keycloak.spis</groupId>
+            <artifactId>spi-providers</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

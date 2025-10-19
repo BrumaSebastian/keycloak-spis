@@ -1,4 +1,4 @@
-package com.extensions.spis.resources.admin.resources;
+package com.keycloak.spis.resources.admin.resources;
 
 import java.net.URI;
 

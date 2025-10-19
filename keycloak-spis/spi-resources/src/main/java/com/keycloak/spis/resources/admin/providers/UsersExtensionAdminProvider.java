@@ -1,4 +1,4 @@
-package com.extensions.spis.resources.admin.providers;
+package com.keycloak.spis.resources.admin.providers;
 
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -6,7 +6,7 @@ import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.ext.AdminRealmResourceProvider;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
-import com.extensions.spis.resources.admin.resources.UsersAdminResource;
+import com.keycloak.spis.resources.admin.resources.UsersAdminResource;
 
 public class UsersExtensionAdminProvider implements AdminRealmResourceProvider {
     @Override
