@@ -1,2 +1,2 @@
-com.extensions.spis.resources.admin.factories.UsersExtensionAdminResourceFactory
-com.extensions.spis.resources.admin.factories.GroupsExtensionAdminResourceFactory
+com.keycloak.spis.resources.admin.factories.UsersExtensionAdminResourceFactory
+com.keycloak.spis.resources.admin.factories.GroupsExtensionAdminResourceFactory
