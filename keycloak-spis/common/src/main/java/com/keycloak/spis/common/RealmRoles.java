@@ -20,6 +20,6 @@ public enum RealmRoles {
     }
 
     public static List<String> getGroupRoles() {
-        return Arrays.asList(GroupAdmin.getRoleName(), GroupMember.getRoleName());
+        return Arrays.asList(GroupAdmin.name(), GroupMember.name());
     }
 }

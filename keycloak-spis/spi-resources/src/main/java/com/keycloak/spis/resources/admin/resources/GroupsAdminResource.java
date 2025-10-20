@@ -1,7 +1,7 @@
 package com.keycloak.spis.resources.admin.resources;
 
 import java.net.URI;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +25,6 @@ import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 import com.keycloak.spis.common.RealmRoles;
 
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -33,7 +32,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-public class GroupsAdminResource extends org.keycloak.services.resources.admin.GroupsResource {
+public class GroupsAdminResource {
     private final AdminPermissionEvaluator auth;
     private final AdminEventBuilder adminEvent;
     private final RealmModel realm;
@@ -41,14 +40,12 @@ public class GroupsAdminResource extends org.keycloak.services.resources.admin.G
 
     public GroupsAdminResource(RealmModel realm, KeycloakSession session, AdminPermissionEvaluator auth,
             AdminEventBuilder adminEvent) {
-        super(realm, session, auth, adminEvent);
         this.auth = auth;
         this.realm = realm;
         this.adminEvent = adminEvent;
         this.session = session;
     }
 
-    @Override
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @APIResponses(value = {
@@ -61,7 +58,6 @@ public class GroupsAdminResource extends org.keycloak.services.resources.admin.G
     @Operation(summary = "create a top level group with children", description = "Create a top level group with sub groups for that represent roles")
     public Response addTopLevelGroup(GroupRepresentation rep) {
         auth.groups().requireManage();
-        System.out.println("asdf");
         if (ObjectUtil.isBlank(rep.getName())) {
             throw ErrorResponse.error("Group name is missing", Response.Status.BAD_REQUEST);
         }
@@ -88,9 +84,8 @@ public class GroupsAdminResource extends org.keycloak.services.resources.admin.G
         }
     }
 
-    @GET
     @Path("{group-id}")
-    public GroupAdminResource getGroup(@PathParam("group-id") String groupId) {
+    public GroupAdminResource getGroupById(@PathParam("group-id") String groupId) {
         auth.groups().requireView();
         GroupModel group = realm.getGroupById(groupId);
 

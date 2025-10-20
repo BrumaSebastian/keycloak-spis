@@ -51,9 +51,9 @@ public class GroupMembersAdminResource {
         }
 
         GroupModel groupRole = groupRoles.stream()
-                .filter(g -> g.getName().equals(RealmRoles.GroupMember.getRoleName()))
+                .filter(g -> g.getName().equals(RealmRoles.GroupMember.name()))
                 .findFirst()
-                .orElseThrow(() -> ErrorResponse.error("Group role not found" + RealmRoles.GroupMember.getRoleName(),
+                .orElseThrow(() -> ErrorResponse.error("Group role not found" + RealmRoles.GroupMember.name(),
                         Status.NOT_FOUND));
 
         if (user.isMemberOf(groupRole)) {
