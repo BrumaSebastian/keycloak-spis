@@ -1,6 +1,9 @@
 package com.keycloak.spis.resources.admin.resources;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -22,7 +25,11 @@ import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 import com.keycloak.spis.common.RealmRoles;
 
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -79,5 +86,27 @@ public class GroupsAdminResource extends org.keycloak.services.resources.admin.G
         } catch (ModelDuplicateException mde) {
             throw ErrorResponse.exists("Top level group named '" + rep.getName() + "' already exists.");
         }
+    }
+
+    @GET
+    @Path("{group-id}")
+    public GroupAdminResource getGroup(@PathParam("group-id") String groupId) {
+        auth.groups().requireView();
+        GroupModel group = realm.getGroupById(groupId);
+
+        if (Objects.isNull(group)) {
+            throw new NotFoundException("Group not found");
+        }
+
+        // Ensure it's a top-level group
+        if (Objects.nonNull(group.getParentId())) {
+            throw new NotFoundException("Group not found");
+        }
+
+        List<GroupModel> groupRoles = group.getSubGroupsStream()
+                .filter(subGroup -> RealmRoles.getGroupRoles().contains(subGroup.getName()))
+                .toList();
+
+        return new GroupAdminResource(session, realm, group, groupRoles, auth, adminEvent);
     }
 }

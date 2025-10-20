@@ -1,5 +1,8 @@
 package com.keycloak.spis.common;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum RealmRoles {
     Admin("admin"),
     User("user"),
@@ -14,5 +17,9 @@ public enum RealmRoles {
 
     public String getRoleName() {
         return roleName;
+    }
+
+    public static List<String> getGroupRoles() {
+        return Arrays.asList(GroupAdmin.getRoleName(), GroupMember.getRoleName());
     }
 }
