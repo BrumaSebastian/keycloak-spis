@@ -2,6 +2,7 @@ package com.keycloak.spis.resources.admin.resources;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
@@ -15,6 +16,7 @@ import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
 import com.keycloak.spis.common.RealmRoles;
 
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -65,6 +67,32 @@ public class GroupMembersAdminResource {
         }
 
         user.joinGroup(groupRole);
+
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    @Path("{user-id}")
+    public Response removeMember(@PathParam("user-id") String userId) {
+        UserProvider userProvider = session.getProvider(UserProvider.class);
+        UserCache userCache = session.getProvider(UserCache.class);
+        UserModel user = userProvider.getUserById(realm, userId);
+
+        if (Objects.isNull(user)) {
+            throw ErrorResponse.error("User not found " + userId, Status.NOT_FOUND);
+        }
+
+        List<GroupModel> memberOfGroups = groupRoles.stream()
+                .filter(g -> user.isMemberOf(g))
+                .toList();
+
+        if (memberOfGroups.isEmpty())
+            throw ErrorResponse.error("User is not a member of the group", Status.NOT_FOUND);
+
+        if (Objects.nonNull(userCache))
+            userCache.evict(realm, user);
+
+        memberOfGroups.forEach(g -> user.leaveGroup(g));
 
         return Response.noContent().build();
     }
