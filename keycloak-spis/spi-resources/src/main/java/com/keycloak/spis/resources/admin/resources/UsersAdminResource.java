@@ -13,21 +13,22 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 
-public class UsersAdminResource extends org.keycloak.services.resources.admin.UsersResource {
+public class UsersAdminResource {
     private final AdminPermissionEvaluator auth;
     private final AdminEventBuilder adminEvent;
+    private final KeycloakSession session;
+    private final RealmModel realm;
 
     public UsersAdminResource(KeycloakSession session, RealmModel realm, AdminPermissionEvaluator auth,
             AdminEventBuilder adminEvent) {
-        super(session, auth, adminEvent);
         this.auth = auth;
         this.adminEvent = adminEvent;
+        this.session = session;
+        this.realm = realm;
     }
 
-    @Override
     @Path("{user-id}")
     public UserAdminResource user(final @PathParam("user-id") String id) {
-        System.out.println("Accessing user with ID: " + id);
         UserModel user = null;
         if (LightweightUserAdapter.isLightweightUser(id)) {
             UserSessionModel userSession = session.sessions().getUserSession(realm,

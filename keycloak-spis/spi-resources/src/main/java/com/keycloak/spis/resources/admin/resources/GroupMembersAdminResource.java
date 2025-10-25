@@ -2,8 +2,6 @@ package com.keycloak.spis.resources.admin.resources;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
-
 import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -14,7 +12,7 @@ import org.keycloak.services.ErrorResponse;
 import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
-import com.keycloak.spis.common.RealmRoles;
+import com.keycloak.spis.common.GroupRealmRoles;
 
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
@@ -53,9 +51,9 @@ public class GroupMembersAdminResource {
         }
 
         GroupModel groupRole = groupRoles.stream()
-                .filter(g -> g.getName().equals(RealmRoles.GroupMember.name()))
+                .filter(g -> g.getName().equals(GroupRealmRoles.GroupMember.name()))
                 .findFirst()
-                .orElseThrow(() -> ErrorResponse.error("Group role not found" + RealmRoles.GroupMember.name(),
+                .orElseThrow(() -> ErrorResponse.error("Group role not found" + GroupRealmRoles.GroupMember.name(),
                         Status.NOT_FOUND));
 
         if (user.isMemberOf(groupRole)) {
