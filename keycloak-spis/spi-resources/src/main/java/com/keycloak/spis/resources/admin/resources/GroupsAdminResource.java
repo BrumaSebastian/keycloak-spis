@@ -2,6 +2,7 @@ package com.keycloak.spis.resources.admin.resources;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ import org.keycloak.services.resources.KeycloakOpenAPI;
 import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
-import com.keycloak.spis.common.RealmRoles;
+import com.keycloak.spis.common.GroupRealmRoles;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.NotFoundException;
@@ -64,12 +65,12 @@ public class GroupsAdminResource {
 
         try {
             GroupModel group = realm.createGroup(rep.getName());
-            GroupModel adminGroup = realm.createGroup(RealmRoles.GroupAdmin.name(), group);
-            GroupModel memberGroup = realm.createGroup(RealmRoles.GroupMember.name(), group);
+            GroupModel adminGroup = realm.createGroup(GroupRealmRoles.GroupAdmin.name(), group);
+            GroupModel memberGroup = realm.createGroup(GroupRealmRoles.GroupMember.name(), group);
 
             RoleProvider roleProvider = session.getProvider(RoleProvider.class);
-            adminGroup.grantRole(roleProvider.getRealmRole(realm, RealmRoles.GroupAdmin.getRoleName()));
-            memberGroup.grantRole(roleProvider.getRealmRole(realm, RealmRoles.GroupMember.getRoleName()));
+            adminGroup.grantRole(roleProvider.getRealmRole(realm, GroupRealmRoles.GroupAdmin.getRoleName()));
+            memberGroup.grantRole(roleProvider.getRealmRole(realm, GroupRealmRoles.GroupMember.getRoleName()));
 
             URI uri = session.getContext().getUri().getAbsolutePathBuilder()
                     .path(group.getId()).build();
@@ -99,7 +100,8 @@ public class GroupsAdminResource {
         }
 
         List<GroupModel> groupRoles = group.getSubGroupsStream()
-                .filter(subGroup -> RealmRoles.getGroupRoles().contains(subGroup.getName()))
+                .filter(subGroup -> Arrays.stream(GroupRealmRoles.values())
+                        .anyMatch(e -> e.getRoleName().equals(subGroup.getName())))
                 .toList();
 
         return new GroupAdminResource(session, realm, group, groupRoles, auth, adminEvent);

@@ -21,6 +21,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.keycloak.spis</groupId>
+            <artifactId>spi-providers</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-admin-client</artifactId>
         </dependency>
