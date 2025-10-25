@@ -29,7 +29,6 @@ public class UsersAdminResource {
 
     @Path("{user-id}")
     public UserAdminResource user(final @PathParam("user-id") String id) {
-        System.out.println("Accessing user with ID: " + id);
         UserModel user = null;
         if (LightweightUserAdapter.isLightweightUser(id)) {
             UserSessionModel userSession = session.sessions().getUserSession(realm,

@@ -24,6 +24,8 @@ import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
 import com.keycloak.spis.common.GroupRealmRoles;
+import com.keycloak.spis.common.PlatformRealmRoles;
+import com.keycloak.spis.common.utils.EnumUtils;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.NotFoundException;
@@ -100,8 +102,8 @@ public class GroupsAdminResource {
         }
 
         List<GroupModel> groupRoles = group.getSubGroupsStream()
-                .filter(subGroup -> Arrays.stream(GroupRealmRoles.values())
-                        .anyMatch(e -> e.getRoleName().equals(subGroup.getName())))
+                .filter(subGroup -> EnumUtils.isValidEnumValue(GroupRealmRoles.class, subGroup.getName(),
+                        GroupRealmRoles::getRoleName))
                 .toList();
 
         return new GroupAdminResource(session, realm, group, groupRoles, auth, adminEvent);

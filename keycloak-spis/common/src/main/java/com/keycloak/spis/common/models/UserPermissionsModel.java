@@ -1,17 +1,18 @@
 package com.keycloak.spis.common.models;
 
 import java.util.List;
+import java.util.Set;
 
 public class UserPermissionsModel {
     private String role;
-    private List<String> permissions;
+    private Set<String> permissions;
     private List<UserGroupPermissionsModel> Groups;
 
-    public List<String> getPermissions() {
+    public Set<String> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<String> permissions) {
+    public void setPermissions(Set<String> permissions) {
         this.permissions = permissions;
     }
 

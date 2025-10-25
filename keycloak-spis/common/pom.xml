@@ -13,6 +13,11 @@
       <packaging>jar</packaging>
 
       <dependencies>
+            <dependency>
+                  <groupId>org.keycloak</groupId>
+                  <artifactId>keycloak-model-jpa</artifactId>
+            </dependency>
+
             <!-- JUnit for testing -->
             <dependency>
                   <groupId>junit</groupId>
