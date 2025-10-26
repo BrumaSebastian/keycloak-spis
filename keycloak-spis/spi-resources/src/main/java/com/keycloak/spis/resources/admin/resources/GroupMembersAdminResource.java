@@ -2,6 +2,8 @@ package com.keycloak.spis.resources.admin.resources;
 
 import java.util.List;
 import java.util.Objects;
+
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
@@ -13,11 +15,16 @@ import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
 import com.keycloak.spis.common.GroupRealmRoles;
+import com.keycloak.spis.common.models.CountRepresentation;
+import com.keycloak.spis.common.models.GroupUserRepresentation;
+import com.keycloak.spis.common.utils.ModelToRepresentation;
 
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -93,5 +100,39 @@ public class GroupMembersAdminResource {
         memberOfGroups.forEach(g -> user.leaveGroup(g));
 
         return Response.noContent().build();
+    }
+
+    @Path("count")
+    @GET
+    public Response getMembersCount(
+            @Parameter(description = "Search by username, first name, last name, email") @QueryParam("search") String search,
+            @Parameter(description = "Boolean which defines whether the params \"last\", \"first\", \"email\" and \"username\" must match exactly") @QueryParam("exact") Boolean exact) {
+        UserProvider userProvider = session.users();
+        groupRoles.forEach(g -> System.out.println(g.getName()));
+        Long results;
+
+        results = groupRoles.stream()
+                .flatMap(g -> userProvider.getGroupMembersStream(realm, g, search, exact, null, null))
+                .distinct()
+                .count();
+
+        return Response.ok(new CountRepresentation(results)).build();
+    }
+
+    @GET
+    public Response getMembers(
+            @Parameter(description = "Search by username, first name, last name, email") @QueryParam("search") String search,
+            @Parameter(description = "Pagination offset") @QueryParam("first") Integer firstResult,
+            @Parameter(description = "Maximum results size (defaults to 100)") @QueryParam("max") Integer maxResults,
+            @Parameter(description = "Boolean which defines whether the params \"last\", \"first\", \"email\" and \"username\" must match exactly") @QueryParam("exact") Boolean exact) {
+        UserProvider userProvider = session.users();
+
+        List<GroupUserRepresentation> users = groupRoles.stream()
+                .flatMap(g -> userProvider.getGroupMembersStream(realm, g, search, exact, firstResult, maxResults)
+                        .map(u -> ModelToRepresentation.toRepresentation(session, realm, u, g)))
+                .distinct()
+                .toList();
+
+        return Response.ok(users).build();
     }
 }
