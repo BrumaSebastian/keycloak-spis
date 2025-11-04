@@ -24,6 +24,7 @@ import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.services.ErrorResponse;
 import org.keycloak.services.resources.KeycloakOpenAPI;
 import org.keycloak.services.resources.admin.AdminEventBuilder;
+import org.keycloak.services.resources.admin.GroupResource;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 import org.keycloak.services.resources.admin.fgap.GroupPermissionEvaluator;
 import org.keycloak.utils.GroupUtils;
@@ -77,6 +78,7 @@ public class GroupsAdminResource {
 
         try {
             GroupModel group = realm.createGroup(rep.getName());
+            GroupResource.updateGroup(rep, group, realm, session);
             GroupModel adminGroup = realm.createGroup(GroupRealmRoles.GroupAdmin.name(), group);
             GroupModel memberGroup = realm.createGroup(GroupRealmRoles.GroupMember.name(), group);
 
