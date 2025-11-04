@@ -6,6 +6,7 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 
 import com.keycloak.spis.common.GroupRealmRoles;
+import com.keycloak.spis.common.models.GroupRolesRepresentation;
 import com.keycloak.spis.common.models.GroupUserRepresentation;
 
 public class ModelToRepresentation extends org.keycloak.models.utils.ModelToRepresentation {
@@ -16,5 +17,16 @@ public class ModelToRepresentation extends org.keycloak.models.utils.ModelToRepr
         groupUserRep.setRole(GroupRealmRoles.valueOf(group.getName()));
 
         return groupUserRep;
+    }
+
+    public static GroupRolesRepresentation toRepresentation(GroupModel group) {
+        if (!EnumUtils.isValidEnumValue(GroupRealmRoles.class, group.getName())) {
+            return null;
+        }
+
+        GroupRolesRepresentation representation = new GroupRolesRepresentation();
+        representation.setId(group.getId());
+        representation.setRole(GroupRealmRoles.valueOf(group.getName()));
+        return representation;
     }
 }

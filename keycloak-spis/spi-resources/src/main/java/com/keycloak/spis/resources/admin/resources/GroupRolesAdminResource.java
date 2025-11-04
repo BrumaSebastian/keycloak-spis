@@ -8,9 +8,12 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.services.resources.admin.AdminEventBuilder;
 import org.keycloak.services.resources.admin.fgap.AdminPermissionEvaluator;
 
-import jakarta.ws.rs.Path;
+import com.keycloak.spis.common.utils.ModelToRepresentation;
 
-public class GroupAdminResource {
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.core.Response;
+
+public class GroupRolesAdminResource {
     private final KeycloakSession session;
     private final RealmModel realm;
     private final GroupModel group;
@@ -18,7 +21,7 @@ public class GroupAdminResource {
     private final AdminPermissionEvaluator auth;
     private final AdminEventBuilder adminEvent;
 
-    public GroupAdminResource(KeycloakSession session, RealmModel realm, GroupModel group,
+    public GroupRolesAdminResource(KeycloakSession session, RealmModel realm, GroupModel group,
             List<GroupModel> groupRoles, AdminPermissionEvaluator auth, AdminEventBuilder adminEvent) {
         this.session = session;
         this.realm = realm;
@@ -28,13 +31,11 @@ public class GroupAdminResource {
         this.adminEvent = adminEvent;
     }
 
-    @Path("members")
-    public GroupMembersAdminResource members() {
-        return new GroupMembersAdminResource(session, realm, group, groupRoles, auth, adminEvent);
-    }
+    @GET
+    public Response getRoles() {
+        var groupRolesRepresentation = groupRoles.stream()
+                .map(g -> ModelToRepresentation.toRepresentation(g));
 
-    @Path("roles")
-    public GroupRolesAdminResource roles() {
-        return new GroupRolesAdminResource(session, realm, group, groupRoles, auth, adminEvent);
+        return Response.ok(groupRolesRepresentation).build();
     }
 }

@@ -108,7 +108,6 @@ public class GroupMembersAdminResource {
             @Parameter(description = "Search by username, first name, last name, email") @QueryParam("search") String search,
             @Parameter(description = "Boolean which defines whether the params \"last\", \"first\", \"email\" and \"username\" must match exactly") @QueryParam("exact") Boolean exact) {
         UserProvider userProvider = session.users();
-        groupRoles.forEach(g -> System.out.println(g.getName()));
         Long results;
 
         results = groupRoles.stream()
