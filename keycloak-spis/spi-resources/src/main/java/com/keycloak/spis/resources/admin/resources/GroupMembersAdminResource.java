@@ -22,6 +22,7 @@ import com.keycloak.spis.common.utils.ModelToRepresentation;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
@@ -98,6 +99,40 @@ public class GroupMembersAdminResource {
             userCache.evict(realm, user);
 
         memberOfGroups.forEach(g -> user.leaveGroup(g));
+
+        return Response.noContent().build();
+    }
+
+    @PUT
+    @Path("{user-id}/roles/{role-id}")
+    public Response addMemberToRole(@PathParam("user-id") String userId, @PathParam("role-id") String roleId) {
+        UserProvider userProvider = session.getProvider(UserProvider.class);
+        UserModel user = userProvider.getUserById(realm, userId);
+
+        if (Objects.isNull(user)) {
+            throw ErrorResponse.error("User not found " + userId, Status.NOT_FOUND);
+        }
+
+        GroupModel groupRole = groupRoles.stream()
+                .filter(g -> g.getId().equals(roleId))
+                .findFirst()
+                .orElseThrow(() -> ErrorResponse.error("Group role not found",
+                        Status.NOT_FOUND));
+
+        if (user.isMemberOf(groupRole)) {
+            throw ErrorResponse.error("User is already a member of the group", Status.CONFLICT);
+        }
+
+        groupRoles.stream().filter(g -> user.isMemberOf(g))
+                .forEach(g -> user.leaveGroup(g));
+
+        user.joinGroup(groupRole);
+
+        UserCache userCache = session.getProvider(UserCache.class);
+
+        if (Objects.nonNull(userCache)) {
+            userCache.evict(realm, user);
+        }
 
         return Response.noContent().build();
     }
