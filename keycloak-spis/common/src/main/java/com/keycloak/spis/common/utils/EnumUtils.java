@@ -6,7 +6,7 @@ import java.util.function.Function;
 public class EnumUtils {
     public static <T extends Enum<T>> boolean isValidEnumValue(Class<T> enumClass, String name) {
         return Arrays.stream(enumClass.getEnumConstants())
-                .anyMatch(enumValue -> enumValue.name().equals(name));
+                .anyMatch(enumValue -> enumValue.name().toLowerCase().equals(name.toLowerCase()));
     }
 
     public static <T extends Enum<T>> boolean isValidEnumValue(Class<T> enumClass, String value,
