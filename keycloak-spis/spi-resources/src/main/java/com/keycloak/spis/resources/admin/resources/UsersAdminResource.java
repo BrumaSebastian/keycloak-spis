@@ -2,6 +2,7 @@ package com.keycloak.spis.resources.admin.resources;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -107,7 +108,6 @@ public class UsersAdminResource {
         userModels = session.users().searchForUserStream(realm, attributes, firstResult, maxResults);
 
         return userModels.map(u -> {
-            System.out.println(u.getUsername());
             RoleModel roleModel = u.getRealmRoleMappingsStream()
                     .filter(r -> EnumUtils.isValidEnumValue(PlatformRealmRoles.class, r.getName()))
                     .findFirst().orElseThrow(() -> new IllegalArgumentException("User " + u.getId() + " has no role"));
@@ -116,7 +116,24 @@ public class UsersAdminResource {
                     .filter(pr -> pr.name().equalsIgnoreCase(roleModel.getName()))
                     .findFirst().orElse(null);
 
-            return ModelToRepresentation.toRepresentation(session, realm, u, platformRole);
+            ExtendedUserRepresentation representation = ModelToRepresentation.toRepresentation(session, realm, u,
+                    platformRole);
+
+            List<String> groups = u.getGroupsStream()
+                    .map(g -> {
+                        var groupParent = g.getParent();
+
+                        while (Objects.nonNull(groupParent.getParentId())) {
+                            groupParent = groupParent.getParent();
+                        }
+
+                        return groupParent.getId();
+                    })
+                    .toList();
+
+            representation.setGroups(groups);
+
+            return representation;
         });
     }
 }
