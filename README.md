@@ -4,7 +4,7 @@ Custom Service Provider Interface (SPI) extensions for Keycloak.
 
 ## Overview
 
-This project provides custom SPIs for Keycloak, built as a multi-module Maven project. The SPIs extend Keycloak's functionality by implementing custom providers for various authentication and authorization scenarios.
+This multi-module Maven project provides custom SPIs that extend Keycloak's functionality (authorization policies, REST resources, and provider wiring). Modules are designed to be packaged as JARs and dropped into a Keycloak deployment.
 
 ## Project Structure
 
@@ -12,37 +12,42 @@ This project provides custom SPIs for Keycloak, built as a multi-module Maven pr
 keycloak-spis/
 ├── README.md
 ├── LICENSE
-└── keycloak-spis/              # Main Maven project
-    ├── pom.xml                 # Parent POM
-    ├── common/                 # Shared utilities and common code
+└── keycloak-spis/                    # Parent Maven project
+    ├── pom.xml                       # Parent POM and dependency management
+    ├── common/                       # Shared utilities and common code
+    │   ├── pom.xml
+    │   └── src/
+    │       ├── main/java/
+    │       └── test/java/
+    ├── spi-policy/                   # Authorization Policy SPI implementation(s)
     │   ├── pom.xml
     │   └── src/
     │       ├── main/java/
     │       ├── main/resources/
+    │       │   └── META-INF/services # SPI service declarations
     │       └── test/java/
-    └── spi-policy/             # Policy SPI implementation
+    ├── spi-providers/                # Provider SPI and factories wiring
+    │   ├── pom.xml
+    │   └── src/
+    │       ├── main/java/
+    │       ├── main/resources/
+    │       │   └── META-INF/services # Provider + factory registrations
+    │       └── test/java/
+    └── spi-resources/                # Additional REST resources and testing helpers
         ├── pom.xml
         └── src/
             ├── main/java/
             ├── main/resources/
-            │   └── META-INF/
-            │       └── services/   # SPI service declarations
+            │   └── META-INF/services
             └── test/java/
 ```
 
 ## Modules
 
-### Common Module
-
-- **Artifact ID**: `common`
-- **Purpose**: Shared utilities and common code used across multiple SPI implementations
-- **Status**: Structure created, implementation pending
-
-### SPI Policy Module
-
-- **Artifact ID**: `spi-policy`
-- **Purpose**: Custom policy SPI implementation for Keycloak
-- **Status**: Structure created, implementation pending
+- **`common`**: Shared code used across modules.
+- **`spi-policy`**: Custom `PolicyProvider` implementations and related wiring.
+- **`spi-providers`**: SPI definitions, factories, and provider registrations (e.g., `org.keycloak.provider.Spi`).
+- **`spi-resources`**: REST endpoints and testing utilities, including test realm files.
 
 ## Technical Details
 
@@ -54,78 +59,95 @@ keycloak-spis/
 
 ## Dependencies
 
-The project uses the following Keycloak dependencies (managed in parent POM):
+Managed at the parent POM; commonly used:
 
 - `keycloak-core`
 - `keycloak-server-spi`
 - `keycloak-server-spi-private`
 
-## Build Profiles
+## Build
 
-### Default Profile
+On Windows, use a terminal (PowerShell or Git Bash).
 
 ```bash
+mvn -v
 mvn clean install
 ```
 
-Builds: `common` and `spi-policy` modules
+Artifacts are produced under each module's `target/` folder as JARs.
 
-### Available Profiles
+## Maven Only
 
-- **`with-policy`**: Includes common and spi-policy modules (default behavior)
+This project is a standard multi-module Maven build.
 
-## Getting Started
+- **Prerequisites**: Java 17, Maven 3.6+
+- **Modules built**: `common`, `spi-policy`, `spi-providers`, `spi-resources`
+- **Top-level build**:
 
-### Prerequisites
+  ```bash
+  mvn clean install
+  ```
 
-- Java 17 or higher
-- Maven 3.6 or higher
-- Keycloak 26.3.3 (for testing and deployment)
+- **Build a single module** (from the repo root or module dir):
 
-### Building the Project
+  ```bash
+  mvn -pl keycloak-spis/spi-policy -am clean install
+  ```
 
-1. Clone the repository:
+  - `-pl` selects the module; `-am` builds required dependencies.
+
+- **Run tests only**:
+
+  ```bash
+  mvn -q test
+  ```
+
+- **Skip tests**:
+
+  ```bash
+  mvn -DskipTests clean install
+  ```
+
+- **View effective POM** (to inspect dependency management):
+
+  ```bash
+  mvn help:effective-pom
+  ```
+
+- **Local install vs. package**:
+  - `mvn install` installs artifacts to your local Maven repo (`~/.m2/repository`).
+  - `mvn package` creates JARs in each module's `target/` without installing.
+
+## Install in Keycloak
+
+Copy the built JARs into your Keycloak `providers/` folder.
+
+## Testing
+
+- Unit tests live in each module under `src/test/java`.
+- The `spi-resources` module includes test resources like `main-realm.json` and `test.properties`.
+
+Run all tests:
 
 ```bash
-git clone <repository-url>
-cd keycloak-spis
-```
-
-2. Build all modules:
-
-```bash
-cd keycloak-spis
-mvn clean install
-```
-
-3. Build specific profile:
-
-```bash
-mvn clean install -Pwith-policy
+mvn -q test
 ```
 
 ## Development Status
 
-🚧 **Project is currently in initial setup phase**
-
 - [x] Maven project structure created
 - [x] Parent POM configuration
-- [x] Module structure (common, spi-policy)
+- [x] Modules: common, spi-policy, spi-providers, spi-resources
 - [x] Keycloak dependencies configured
-- [ ] SPI implementations
-- [ ] Service provider declarations
-- [ ] Unit tests
-- [ ] Integration tests
-- [ ] Documentation
-
-## Deployment
-
-(Deployment instructions will be added once SPI implementations are complete)
+- [ ] SPI implementations finalized
+- [ ] Expanded service declarations
+- [ ] Unit and integration tests
+- [ ] Usage documentation and examples
 
 ## Contributing
 
-(Contributing guidelines will be added)
+PRs and issues are welcome. Please include module, Keycloak version, and a minimal reproduction when reporting problems.
 
 ## License
 
-This project is licensed under the terms specified in the LICENSE file.
+See LICENSE for details.
